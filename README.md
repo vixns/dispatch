@@ -8,7 +8,7 @@
 
 A self-hosted mail forwarding web API server.
 
-This program was created to provide a json-based email API for static sites. You could use any transactional mailing service and pay them a monthly fee, or stand up your own dispatch.
+This program was created to provide a json-based email and slack API for static sites. You could use any transactional mailing service and pay them a monthly fee, or stand up your own dispatch.
 
 ## Installing
 
@@ -69,6 +69,10 @@ from: dispatch@my-site.com
 to:
   - admin@my-site.com
   - personal@anywhere.com
+# also send notifications to slack
+slack:
+  token: --------------------
+  channel: #my-site
 
 defaults:
   subject: "site message"
@@ -137,7 +141,7 @@ Hidden Flags:
 ```
 
 ## Examples
-To send an email using dispatch, simply send a JSON formatted POST request to the `/send` endpoint. The format is as follows:
+To send an email/slack notification using dispatch, simply send a JSON formatted POST request to the `/send` endpoint. The format is as follows:
 ```json
 {
     "auth-token": "",

@@ -113,7 +113,14 @@ func (d *Dispatch) Send(request DispatchRequest) error {
 	email.TextMessage = msgBuffer.String()
 
 	log.Infof("sending message: {AuthToken:%s Name:%s}", request["auth-token"], request["name"])
-	sendMessage(email, d.smtpSettings)
+
+	if t, ok := target.Slack["token"]; ok && len(target.Slack["token"]) > 0 {
+		sendSlackMessage(email, SlackSettings{Token: t, ChannelID: target.Slack["channel"]})
+	}
+
+	if len(target.From) > 0 {
+		sendMessage(email, d.smtpSettings)
+	}
 	return nil
 }
 
@@ -124,6 +131,7 @@ type DispatchTarget struct {
 	To        []string          `yaml:"to"`
 	Name      string            `yaml:"name"`
 	Defaults  map[string]string `yaml:"defaults"`
+	Slack     map[string]string `yaml:"slack"`
 }
 
 func getTargetConfigList(targetDir string) (target []string, err error) {
